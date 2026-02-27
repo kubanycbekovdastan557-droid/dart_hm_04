@@ -14,7 +14,6 @@ void main() {
 
   Car friendsCar = Car(2023, 'white', 'Mercedes 220');
   friendsCar.displayInfo();
-
   friendsCar.drive();
   myCar.drive();
   myCar.honk(3);
