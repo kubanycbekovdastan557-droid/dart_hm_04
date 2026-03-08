@@ -36,4 +36,6 @@ class Boss extends GameCharacter {
     }
     return '${super.toString()} Defence: $d';
   }
+
+  bool isStunned = false;
 }

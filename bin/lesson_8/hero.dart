@@ -30,7 +30,16 @@ class Magic extends Hero {
   Magic(String name, int health, int damage)
     : super(name, health, damage, SuperAbility.boost);
 
-  void applySuperPower(Boss boss, List<Hero> heroes) {}
+  void applySuperPower(Boss boss, List<Hero> heroes) {
+    if (RpgGame.roundNumber <= 4){
+      for(var hero in heroes){
+      if (hero.health > 0 && this != hero) {
+      hero.damage += 5;
+}
+      }
+    }
+    print('Magic has strengthened the heroes attack!');
+  }
 }
 
 class Medic extends Hero {
@@ -55,5 +64,82 @@ class Berserk extends Hero {
   void applySuperPower(Boss boss, List<Hero> heroes) {
     boss.health -= blockedDamage;
     print('Berserk $name is reverted $blockedDamage');
+  }
+}
+
+
+class Golem extends Hero {
+
+  Golem(String name, int health, int damage)
+      : super(name, health, damage, SuperAbility.blockRevert);
+
+
+  void applySuperPower(Boss boss, List<Hero> heroes) {
+    for (var hero in heroes) {
+      if (hero.isAlive() && hero is! Golem) {
+        int damageToHero = boss.damage;
+        int p = damageToHero ~/ 5;
+
+        hero.health -= (damageToHero - p);
+        this.health -= p;
+      }
+    }
+  }
+}
+
+
+
+  class Lucky extends Hero {
+  Lucky(String name, int health, int damage)
+      : super(name, health, damage, SuperAbility.lucky);
+
+  
+  void applySuperPower(Boss boss, List<Hero> heroes) {}
+}
+  
+ 
+
+
+
+class Witcher extends Hero {
+  bool hasResurrected = false;
+
+  Witcher(String name, int health, int damage)
+      : super(name, health, damage, SuperAbility.resurrection);
+
+
+  void attack(Boss boss) {
+    // Witcher не атакует босса
+  }
+
+
+  void applySuperPower(Boss boss, List<Hero> heroes) {
+    if (!hasResurrected && this.isAlive()) {
+      for (var hero in heroes) {
+        if (!hero.isAlive()) {
+          hero.health = this.health;
+          this.health = 0;
+          hasResurrected = true;
+
+          print(
+              "Witcher $name sacrificed himself to resurrect ${hero.name}");
+          break;
+        }
+      }
+    }
+  }
+}
+
+
+class Thor extends Hero {
+  Thor(String name, int health, int damage)
+      : super(name, health, damage, SuperAbility.stun);
+
+  @override
+  void applySuperPower(Boss boss, List<Hero> heroes) {
+    if (RpgGame.random.nextBool()) {
+      boss.isStunned = true;
+      print("Thor $name stunned the boss!");
+    }
   }
 }

@@ -15,8 +15,11 @@ class RpgGame {
     Medic doc = Medic('Tom', 250, 5, 15);
     Medic assistant = Medic('Strange', 300, 5, 5);
     Berserk berserk = Berserk('Guts', 260, 10);
-
-    List<Hero> heroes = [warrior1, assistant, warrior2, magic, doc, berserk];
+    Golem golem = Golem('Alukard', 320, 8);
+    Lucky lucky = Lucky("Jack", 270, 12);
+    Witcher witcher = Witcher("Geralt", 300, 0);
+    Thor thor = Thor("Thor", 290, 15);
+    List<Hero> heroes = [warrior1, assistant, warrior2, magic, doc, berserk, golem, lucky, witcher, thor];
 
     _showStatistics(boss, heroes);
 
@@ -48,17 +51,26 @@ class RpgGame {
   }
 
   static void _playRound(Boss boss, List<Hero> heroes) {
-    _roundNumber++;
-    boss.chooseDefence();
+  _roundNumber++;
+
+  boss.chooseDefence();
+
+  if (!boss.isStunned) {
     boss.attack(heroes);
-    for (var hero in heroes) {
-      if (hero.isAlive() && boss.isAlive() && boss.defence != hero.ability) {
-        hero.attack(boss);
-        hero.applySuperPower(boss, heroes);
-      }
-    }
-    _showStatistics(boss, heroes);
+  } else {
+    print("Boss is stunned and skips the round!");
+    boss.isStunned = false;
   }
+
+  for (var hero in heroes) {
+    if (hero.isAlive() && boss.isAlive() && boss.defence != hero.ability) {
+      hero.attack(boss);
+      hero.applySuperPower(boss, heroes);
+    }
+  }
+
+  _showStatistics(boss, heroes);
+}
 
   static _showStatistics(Boss boss, List<Hero> heroes) {
     print('ROUND $_roundNumber ----------');
@@ -67,4 +79,5 @@ class RpgGame {
       print(hero);
     }
   }
+static int get roundNumber => _roundNumber;
 }
